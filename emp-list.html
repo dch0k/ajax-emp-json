@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX JSON LAB</title>
+    <style type="text/css">
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            text-align: left;
+            border-collapse: collapse;
+            height: 40px;
+            width: 100%;
+        }
+        button {
+            display: inline-block;
+        }
+        h1,
+        h2 {
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            width: 80px;
+            margin: 20px auto;
+        }
+        #divWrap {
+            width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="divWrap">
+        <div align: "center">
+            <center>
+                <button id="btnLoad" class="btn">Load Data</button>
+                <button id="btnRst" class="btn">Reset</button>
+            </center>
+            <h2>Employee List</h2>
+        </div>
+        <div id="divTabnew">
+            <table id="dataTabe">
+            </table>
+        </div>
+        <div id="divTab">
+            <table id="dataTab" display=T abblock>
+                <tr id="hdTab" bgcolor="grey">
+                    <th style="width :40px">ID</th>
+                    <th style="width :100px">First Name</th>
+                    <th style="width :150px">Last Name</th>
+                    <th style="width :200px">Title</th>
+                    <th style="width :350px">Email</th>
+                    <th style="width :100px">Gender</th>
+                    <th style="width :100px">Active</th>
+                    <tr>
+            </table>
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+//Vanila JavScript
+        // Load data button
+        var loadData = document.getElementById("btnLoad");
+        var reset = document.getElementById("btnRst");
+        reset.disabled = true;
+
+
+        //Load JSON data from URL
+        loadData.addEventListener('click', function() {
+
+            var empRequest = new XMLHttpRequest();
+            empRequest.onreadystatechange = function() {
+                if (empRequest.readyState === 4 && empRequest.status === 200) {
+                    var empArray = JSON.parse(empRequest.responseText);
+                    employeeData(empArray);
+                }
+            };
+
+            empRequest.open('GET', 'http://libertyville.rice.iit.edu/scripts/lab2.php', true);
+            empRequest.send();
+
+            function employeeData(empList) {
+
+                console.log(empList);
+
+                for (var i = 0; i < empList.length; i++) {
+
+
+                    //creating table
+                    var tabData = document.getElementById('dataTab');
+
+
+                    //id
+                    var rw = document.createElement('tr');
+                    rw.id = 'emp-' + empList[i].id;
+
+                    var colId = document.createElement('td');
+                    colId.style.width = "50px";
+
+                    var valId = document.createTextNode(empList[i].id);
+                    colId.appendChild(valId);
+                    rw.appendChild(colId);
+
+                    //First Name
+                    var colFname = document.createElement('td');
+                    colFname.style.width = "150px";
+                    var valFname = document.createTextNode(empList[i].first_name);
+                    colFname.appendChild(valFname);
+                    rw.appendChild(colFname);
+
+                    //Last Name
+                    var colLname = document.createElement('td');
+                    colLname.style.width = "150px";
+                    var valLname = document.createTextNode(empList[i].last_name);
+                    colLname.appendChild(valLname);
+                    rw.appendChild(colLname);
+
+                    //Title
+                    var colTitle = document.createElement('td');
+                    colTitle.style.width = "250px";
+                    var valTitle = document.createTextNode(empList[i].title);
+                    colTitle.appendChild(valTitle);
+                    rw.appendChild(colTitle);
+
+                    //Email
+                    var colEmail = document.createElement('td');
+                    colEmail.style.width = "400px";
+                    var valEmail = document.createTextNode(empList[i].email);
+                    colEmail.appendChild(valEmail);
+                    rw.appendChild(colEmail);
+
+                    //Gender
+                    var colGen = document.createElement('td');
+                    colGen.style.width = "100px";
+                    var valGen = document.createTextNode(empList[i].gender);
+                    colGen.appendChild(valGen);
+                    rw.appendChild(colGen);
+
+
+                    //Active
+                    var colActv = document.createElement('td');
+                    colActv.id = 'actId' + i;
+                    colActv.style.width = "100px";
+                    var valActv = document.createTextNode(empList[i].active);
+                    colActv.appendChild(valActv);
+                    rw.appendChild(colActv);
+
+                    tabData.appendChild(rw);
+                    console.log(valActv);
+                    //Cell color
+                    if (empList[i].active == true) {
+                        document.getElementById('actId' + i).style.backgroundColor = "Green";
+                    } else {
+
+                        document.getElementById('actId' + i).style.backgroundColor = "Red";
+
+                    }
+
+                }
+
+                return empList;
+
+            };
+            loadData.disabled = true;
+            reset.disabled = false;
+
+        });
+      
+        //Reset buttion Function
+	    reset.addEventListener('click', function() {
+            //button status
+
+            loadData.disabled = false;
+            reset.disabled = true;
+
+            var element = document.getElementById('dataTab');
+            while (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
+
+
+            //table
+            var tbl = document.getElementById('dataTab');
+            //var tbl= document.createElement('table');
+            //id reset
+            var rw = document.createElement('tr');
+            rw.style.backgroundColor = 'grey';
+            var colId = document.createElement('th');
+            colId.style.width = "50px";
+
+            var valId = document.createTextNode("ID");
+            colId.appendChild(valId);
+            rw.appendChild(colId);
+
+            //First Name reset
+            var colFname = document.createElement('th');
+            colFname.style.width = "150px";
+
+            var valFname = document.createTextNode("First Name");
+            colFname.appendChild(valFname);
+            rw.appendChild(colFname);
+
+            //Last Name reset
+            var colLname = document.createElement('th');
+            colLname.style.width = "150px";
+
+            var valLname = document.createTextNode("Last Name");
+            colLname.appendChild(valLname);
+            rw.appendChild(colLname);
+
+            //Title reset
+            var colTitle = document.createElement('th');
+            colTitle.style.width = "250px";
+
+            var valTitle = document.createTextNode("Title");
+            colTitle.appendChild(valTitle);
+            rw.appendChild(colTitle);
+
+            //Email reset
+            var colEmail = document.createElement('th');
+            colEmail.style.width = "400px";
+
+            var valEmail = document.createTextNode("Email");
+            colEmail.appendChild(valEmail);
+            rw.appendChild(colEmail);
+
+            //Gender reset
+            var colGen = document.createElement('th');
+            colGen.style.width = "100px";
+
+            var valGen = document.createTextNode("Gender");
+            colGen.appendChild(valGen);
+            rw.appendChild(colGen);
+
+
+            //Active reset
+            var colActv = document.createElement('th');
+            colActv.style.width = "100px";
+
+            var valActv = document.createTextNode("Active");
+            colActv.appendChild(valActv);
+            rw.appendChild(colActv);
+
+            tbl.appendChild(rw);
+            tabData.appendChild(tbl);
+
+        });
+    </script>
+</body>
+
+</html>
